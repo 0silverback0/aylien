@@ -6,19 +6,11 @@ function handleSubmit(event) {
     Client.checkForName(formText)
 
     console.log("::: Form Submitted :::")
-    fetch('https://dog.ceo/api/breeds/image/random')
+    fetch('http://localhost:8081/test')
     .then(res => res.json())
     .then(function(res) {
-        view(res.message)
-        console.log(res.message)
+        document.getElementById('results').innerHTML = res.message
     })
 }
 
-function view(data){
-    let html = data;
-    let img = document.querySelector('#results')
-    img.setAttribute('src', data)
-
-    //document.getElementById('results').innerHTML = html
-}
 export { handleSubmit }
