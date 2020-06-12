@@ -43,15 +43,22 @@ app.get('/test', function (req, res) {
 })
 
 
-const getData = async(req, res) => {
-	 res = await fetch(`https://api.aylien.com/api/v1/sentiment ${process.env.API_KEY}`)
-	try{
-		const data = await res.json();
-		console.log(data)
-		return data;
-	} catch(error) {
-		console.log("error at getData", error);
-	}
-}
+// post request
 
-app.get('/api', getData)
+app.post('/aylien', async (req,res) => {
+	const formText = req.body;
+	console.log(formText)
+
+	try {
+		textapi.sentiment({
+  		text: formText,
+  		mode: 'text'
+		}, function(error, response) {
+ 		 if (error === null) {
+   		 console.log(response);
+ 		 }
+		});
+		} catch(error){
+			console.log('error at aylien', error)
+		}
+		})	
