@@ -6,24 +6,6 @@ var path = require('path')
 const express = require('express')
 const mockAPIResponse = require('./mockAPI.js')
 
-// require aylien and get env variables
-const aylien = require("aylien_textapi");
-var textapi = new aylien({
-application_id: process.env.API_ID,
-application_key: process.env.API_KEY
-});
-
-textapi.sentiment({
-  text: 'John is a very good football player',
-  mode: 'tweet'
-}, function(error, response) {
-  if (error === null) {
-    console.log(response);
-  }
-});
-
-console.log(process.env.API_KEY);
-
 //dependencies
 
 const app = express()
@@ -54,12 +36,50 @@ app.get('/test', function (req, res) {
 
 projectData = {};
 
+// require aylien and get env variables
+const aylien = require("aylien_textapi");
+var textapi = new aylien({
+application_id: process.env.API_ID,
+application_key: process.env.API_KEY
+});
+
+let word = "Hello, I love hate you.";
+
+
 // post request
 const data = [];
 
 app.post('/', addData)
 
 function addData(req,res) {
-	console.log(req.body)
+	console.log(req.body.text)
 	data.push(req.body)
+  //console.log(data)
+
+  data['text'] = req.body.text
+
+  textapi.sentiment({
+  text: data.text,
+  mode: 'tweet'
+  }, function(error, response) {
+  if (error === null) {
+    //console.log(response);
+    projectData['polarity'] = response.polarity
+    projectData['subjectivity'] = response.subjectivity
+    projectData['text'] = response.text
+    projectData['polarity_confidence'] = response.polarity_confidence
+    projectData['subjectivity_confidence'] = response.subjectivity_confidence
+    res.send(projectData)
+    console.log(projectData)
+  }
+  });
 }
+
+
+app.get('/sentiment', (req, res) => {
+  res.send(projectData)
+})
+
+
+
+  
