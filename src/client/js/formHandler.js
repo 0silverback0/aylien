@@ -3,23 +3,32 @@ function handleSubmit(event) {
     
     // check what text was put into the form field
     let formText = document.getElementById('name').value
-    console.log(formText)
+    //console.log(formText)
 
     Client.checkForName(formText)
-    console.log("::: Form Submitted :::")
-    fetch('http://localhost:8080/aylien',
-    {
-        method: 'POST',
-        body: JSON.stringify({formText}),
-        headers: {'Content-Type': 'application/json'},
+    //console.log("::: Form Submitted :::")
 
-    })
-    .then(res => res.json())
-    .then(function(res) {
-        document.getElementById('results').innerHTML = res.body;
-        console.log(res)
-    })
-    
+    postData('/', {text: formText});
+    }
+
+// post data function that post to post route on server
+const postData = async ( url = '', data = {}) =>{
+    const response = await fetch(url, {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
+
+    try{
+        const newData = await response.json();
+        console.log(newData)
+        return newData;
+    }catch(error){
+        console.log("error at post data", error);
+    }
 }
 
 export { handleSubmit }
