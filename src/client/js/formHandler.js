@@ -8,7 +8,10 @@ function handleSubmit(event) {
     Client.checkForName(formText)
     //console.log("::: Form Submitted :::")
 
-    postData('/', {text: formText});
+    postData('/', {text: formText})
+        .then(
+            getSentiment('/sentiment')
+            )
     }
 
 // post data function that post to post route on server
@@ -24,10 +27,22 @@ const postData = async ( url = '', data = {}) =>{
 
     try{
         const newData = await response.json();
-        console.log(newData)
+        //console.log(newData)
         return newData;
     }catch(error){
         console.log("error at post data", error);
+    }
+}
+
+//get request for all data from sentiment route
+const getSentiment = async (url) =>{
+    const res = await fetch('/sentiment')
+    try{
+        const data = await res.json();
+        console.log(data)
+        return data;
+    } catch(error) {
+        console.log("error at getSentiment", error);
     }
 }
 
