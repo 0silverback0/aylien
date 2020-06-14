@@ -13,6 +13,15 @@ application_id: process.env.API_ID,
 application_key: process.env.API_KEY
 });
 
+textapi.sentiment({
+  text: 'John is a very good football player',
+  mode: 'tweet'
+}, function(error, response) {
+  if (error === null) {
+    console.log(response);
+  }
+});
+
 console.log(process.env.API_KEY);
 
 //dependencies
@@ -34,8 +43,8 @@ app.get('/', function (req, res) {
 })
 
 // designates what port the app will listen to for incoming requests
-app.listen(8081, function () {
-    console.log('Example app listening on port 8081!')
+app.listen(8080, function () {
+    console.log('Example app listening on port 8080!')
 })
 
 app.get('/test', function (req, res) {
@@ -43,22 +52,14 @@ app.get('/test', function (req, res) {
 })
 
 
+projectData = {};
+
 // post request
+const data = [];
 
-app.post('/aylien', async (req,res) => {
-	const formText = req.body;
-	console.log(formText)
+app.post('/', addData)
 
-	try {
-		textapi.sentiment({
-  		text: formText,
-  		mode: 'text'
-		}, function(error, response) {
- 		 if (error === null) {
-   		 console.log(response);
- 		 }
-		});
-		} catch(error){
-			console.log('error at aylien', error)
-		}
-		})	
+function addData(req,res) {
+	console.log(req.body)
+	data.push(req.body)
+}
