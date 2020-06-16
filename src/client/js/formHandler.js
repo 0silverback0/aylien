@@ -9,9 +9,12 @@ function handleSubmit(event) {
     //console.log("::: Form Submitted :::")
 
     postData('/', {text: formText})
-        .then(
+        .then(function() {
             getSentiment('/sentiment')
-            )
+            })
+        .then(function(){
+            updateUI()
+        })
     }
 
 // post data function that post to post route on server
@@ -39,11 +42,28 @@ const getSentiment = async (url) =>{
     const res = await fetch('/sentiment')
     try{
         const data = await res.json();
-        console.log(data)
+        //console.log(data)
         return data;
     } catch(error) {
         console.log("error at getSentiment", error);
     }
+}
+
+// Update UI function
+const updateUI = async () => {
+  const request = await fetch('/sentiment');
+  try{
+    const allData = await request.json();
+    console.log(allData.polarity);
+      document.getElementById('polarity').innerHTML = allData.polarity;
+      document.getElementById('subjectivity').innerHTML = allData.subjectivity;
+      document.getElementById('text').innerHTML = allData.text;
+      document.getElementById('polarity_confidence').innerHTML = allData.polarity_confidence;
+      document.getElementById('subjectivity_confidence').innerHTML = allData.subjectivity_confidence
+
+  }catch(error){
+    console.log("error at updateUI", error);
+  }
 }
 
 export { handleSubmit }
