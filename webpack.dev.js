@@ -9,8 +9,7 @@ module.exports = {
     devtool: 'source-map',
     stats: 'verbose',
     devServer:{
-        port: 8080,
-        localhost: 8080
+        port: 8080
     },
     output: {
         libraryTarget: 'var',
